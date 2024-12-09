@@ -1,0 +1,11 @@
+@import url('https://fonts.googleapis.com/css2?family=Alegreya:wght@400;700&family=Nunito:wght@400;700&display=swap');
+
+header {
+    color: #ff8400;
+    font-family: 'Alegreya', serif;
+}
+
+body {
+    font-family: 'Nunito', sans-serif;
+    background-color: #ff8400;
+}
