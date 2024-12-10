@@ -1,3 +1,4 @@
+
 /* fonts */
 @import url("https://fonts.googleapis.com/css2?family=Alegreya:wght@400;700&family=Nunito:wght@400;700&display=swap");
 
@@ -41,9 +42,12 @@ header {
     margin-bottom: 5px;
 }
 
-#sample-text {
-    min-height: 100px; /* Adjust as needed */
-    background-color: #f8f9fa; /* Light background color */
-    padding: 10px;
-    border-radius: 5px;
+/* typing feedback */
+
+.correct {
+    color: blue;
+}
+
+.incorrect {
+    color: red;
 }

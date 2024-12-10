@@ -1,64 +1,64 @@
 document.addEventListener('DOMContentLoaded', function () {
-    const sampleTexts = {
-        easy: [
-            "The quick brown fox jumps over the lazy dog.",
-            "Pack my box with five dozen liquor jugs.",
-            "How razorback-jumping frogs can level six piqued gymnasts!"
-        ],
-        medium: [
-            "The five boxing wizards jump quickly.",
-            "Bright vixens jump; dozy fowl quack.",
-            "Quick zephyrs blow, vexing daft Jim."
-        ],
-        hard: [
-            "Jinxed wizards pluck ivy from the big quilt.",
-            "Crazy Fredrick bought many very exquisite opal jewels.",
-            "We promptly judged antique ivory buckles for the next prize."
-        ]
-    };
+    const easyTexts = [
+        "The cat sat on the mat.",
+        "A quick brown fox jumps over the lazy dog.",
+        "She sells seashells by the seashore."
+    ];
+
+    const mediumTexts = [
+        "To be or not to be, that is the question.",
+        "All that glitters is not gold.",
+        "A journey of a thousand miles begins with a single step."
+    ];
+
+    const hardTexts = [
+        "It was the best of times, it was the worst of times.",
+        "In the beginning God created the heavens and the earth.",
+        "The only thing we have to fear is fear itself."
+    ];
 
     const difficultySelect = document.getElementById('difficulty');
     const sampleTextDiv = document.getElementById('sample-text');
-    const startButton = document.getElementById('start-btn');
-    const stopButton = document.getElementById('stop-btn');
     const timeDisplay = document.getElementById('time');
     const userInput = document.getElementById('user-input');
     const levelDisplay = document.getElementById('level');
     const wpmDisplay = document.getElementById('wpm');
+    const retryButton = document.getElementById('retry-btn');
 
-    let startTime, endTime;
+    let startTime;
+    let endTime;
+    let testStarted = false;
 
-    function getRandomText(difficulty) {
-        const texts = sampleTexts[difficulty];
-        return texts[Math.floor(Math.random() * texts.length)];
+    function getRandomText(textArray) {
+        const randomIndex = Math.floor(Math.random() * textArray.length);
+        return textArray[randomIndex];
     }
 
-    function updateText() {
-        const selectedDifficulty = difficultySelect.value;
-        const randomText = getRandomText(selectedDifficulty);
-        sampleTextDiv.textContent = randomText;
-    }
+    function updateSampleText() {
+        let selectedDifficulty = difficultySelect.value;
+        let selectedText;
 
-    function startTest() {
-        startTime = new Date();
-        startButton.disabled = true;
-        stopButton.disabled = false;
-        userInput.disabled = false;
-        userInput.value = '';
-        userInput.focus();
-        updateText();
+        if (selectedDifficulty === 'easy') {
+            selectedText = getRandomText(easyTexts);
+        } else if (selectedDifficulty === 'medium') {
+            selectedText = getRandomText(mediumTexts);
+        } else if (selectedDifficulty === 'hard') {
+            selectedText = getRandomText(hardTexts);
+        }
+
+        sampleTextDiv.textContent = selectedText;
     }
 
     function stopTest() {
         endTime = new Date();
-        const timeTaken = (endTime - startTime) / 1000;
+        const timeTaken = (endTime - startTime) / 1000; // time in seconds
         const wpm = calculateWPM(timeTaken);
         
         displayResults(timeTaken, wpm);
 
-        startButton.disabled = false;
-        stopButton.disabled = true;
-        userInput.disabled = true;
+        userInput.disabled = true;        
+        retryButton.disabled = false;
+        testStarted = false;
     }
 
     function calculateWPM(timeTaken) {
@@ -66,14 +66,14 @@ document.addEventListener('DOMContentLoaded', function () {
         const userText = userInput.value.trim();
         const sampleWords = sampleText.split(" ");
         const userWords = userText.split(" ");
-        
+    
         let correctWords = 0;
         for (let i = 0; i < userWords.length; i++) {
             if (userWords[i] === sampleWords[i]) {
                 correctWords++;
             }
         }
-        
+    
         return Math.round((correctWords / timeTaken) * 60);
     }
 
@@ -85,25 +85,54 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function updateTypingFeedback() {
+
+        if (!testStarted) {
+            startTime = new Date();
+            testStarted = true;
+            retryButton.disabled = true;
+        }
+
         const sampleText = sampleTextDiv.textContent.trim();
         const userText = userInput.value.trim();
         const sampleWords = sampleText.split(" ");
         const userWords = userText.split(" ");
-        
+    
         let feedbackHTML = '';
+    
         for (let i = 0; i < sampleWords.length; i++) {
-            if (userWords[i] === undefined) {
-                feedbackHTML += `<span>${sampleWords[i]}</span> `;
-            } else if (userWords[i] === sampleWords[i]) {
-                feedbackHTML += `<span style="color: blue;">${sampleWords[i]}</span> `;
+            if (userWords[i] === sampleWords[i]) {
+                feedbackHTML += `<span class="correct">${sampleWords[i]}</span> `;
+            } else if (userWords[i]) {
+                feedbackHTML += `<span class="incorrect">${sampleWords[i]}</span> `;
             } else {
-                feedbackHTML += `<span style="color: red;">${sampleWords[i]}</span> `;
+                feedbackHTML += `<span>${sampleWords[i]}</span> `;
             }
         }
-        sampleTextDiv.innerHTML = feedbackHTML;
+    
+        sampleTextDiv.innerHTML = feedbackHTML.trim();
     }
 
-    startButton.addEventListener('click', startTest);
-    stopButton.addEventListener('click', stopTest);
+    function handleEnterKey(event) {
+        if (event.key === 'Enter') {
+            stopTest();
+        }
+    }
+
+    function resetTest() {
+        userInput.value = '';
+        userInput.disabled = false;
+        updateSampleText();
+        timeDisplay.textContent = '0';
+        wpmDisplay.textContent = '0';
+        testStarted = false;
+        retryButton.disabled = true;
+    }
+
+    difficultySelect.addEventListener('change', updateSampleText);
     userInput.addEventListener('input', updateTypingFeedback);
+    userInput.addEventListener('keydown', handleEnterKey);
+    retryButton.addEventListener('click', resetTest);
+
+    // Initialize with a random text from the default difficulty level
+    updateSampleText();
 });
