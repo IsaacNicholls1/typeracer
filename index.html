@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -29,7 +28,6 @@
             <div class="row">
                 <div class="col-md-8">
                     <div class="input-group mb-3">
-                        <label class="input-group-text" for="difficulty">Select Difficulty</label>
                         <select class="form-select" id="difficulty">
                             <option value="easy">Easy</option>
                             <option value="medium">Medium</option>
@@ -45,11 +43,13 @@
                     <div class="mb-3">
                         <label class="form-label visually-hidden" for="user-input">Type Here</label>
                         <textarea class="form-control" id="user-input" rows="6"
-                            placeholder="Click the start button to begin the test"></textarea>
+                            placeholder="Click the start button to begin the test" disabled></textarea>
                     </div>
                     <div class="mb-3 text-center">
                         <button class="btn btn-lg btn-outline-orange" id="start-btn">Start</button>
-                        <button class="btn btn-lg btn-outline-orange" id="stop-btn">Stop</button>
+                        <button class="btn btn-lg btn-outline-orange" id="stop-btn" disabled>Stop</button>
+                    </div>
+                    <div class="mb-3 text-center">
                         <button class="btn btn-lg btn-outline-orange" id="retry-btn">Retry</button>
                     </div>
                 </div>
@@ -74,7 +74,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.min.js"></script>
     <!-- Add your own kit code to enable Font Awesome -->
     <script src="https://kit.fontawesome.com/YOUR-KIT-CODE-HERE.js" crossorigin="anonymous"></script>
-    <script src="assets/js/script.js"></script>
+    <script src="assets/script.js"></script>
 </body>
 
 </html>
